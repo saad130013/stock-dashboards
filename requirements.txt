@@ -1,0 +1,15 @@
+yfinance
+pandas
+pandas-ta
+streamlit
+numpy
+prophet
+plotly
+plyer
+tensorflow
+matplotlib
+opencv-python
+stocknews
+requests
+beautifulsoup4
+fpdf
