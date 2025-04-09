@@ -2,7 +2,14 @@ yfinance
 pandas
 pandas-ta
 streamlit
+numpy==1.26.4
 prophet
 plotly
+plyer
 tensorflow
 matplotlib
+opencv-python
+stocknews
+requests
+beautifulsoup4
+fpdf
