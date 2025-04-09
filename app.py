@@ -6,86 +6,18 @@ import numpy as np
 import plotly.graph_objs as go
 from datetime import datetime, timedelta
 from prophet import Prophet
+
 from transformers import pipeline
-import requests
-from bs4 import BeautifulSoup
-import matplotlib.pyplot as plt
-import time
-import json
 
-# ---------------------- الإعدادات الأولية ----------------------
-st.set_page_config(
-    page_title="منصة الذكاء المالي - تاسي",
-    page_icon="💹",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
-
-# ---------------------- الأنماط المخصصة ----------------------
-st.markdown("""
-    <style>
-    .main {
-        background-color: #F5F5F5;
-    }
-    .stock-card {
-        padding: 20px;
-        border-radius: 15px;
-        background: white;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        margin: 10px 0;
-    }
-    .news-card {
-        padding: 15px;
-        border-left: 4px solid #0078FF;
-        margin: 10px 0;
-        background: white;
-    }
-    .metric-box {
-        padding: 15px;
-        border-radius: 10px;
-        background: linear-gradient(45deg, #0078FF, #00C7FF);
-        color: white !important;
-    }
-    @media (max-width: 768px) {
-        .mobile-hide {
-            display: none;
-        }
-    }
-    </style>
-""", unsafe_allow_html=True)
-
-# ---------------------- الوظائف الأساسية ----------------------
-@st.cache_resource(ttl=3600)
-def load_all_stocks():
-    url = "https://api.tadawul.com.sa/v1/stocks"
-    try:
-        response = requests.get(url)
-        return response.json()
-    except:
-        return {
-            "أرامكو": "2222.SR",
-            "سابك": "2010.SR",
-            "الاتصالات": "7010.SR",
-            "الراجحي": "1120.SR",
-            "الأهلي": "1180.SR"
-        }
-
-@st.cache_data(ttl=600)
-def get_stock_data(symbol, period="1y", interval="1h"):
-    try:
-        data = yf.download(symbol, period=period, interval=interval)
-        if data.empty:
-            return None
-        return data
-    except Exception as e:
-        st.error(f"خطأ في جلب البيانات: {str(e)}")
-        return None
-
-# ---------------------- تحليل المشاعر ----------------------
-sentiment_analyzer = pipeline("sentiment-analysis", model="UBC-NLP/AraBERT")
+# استخدم موديل جاهز مدمج لا يحتاج تحميل من الإنترنت
+sentiment_analyzer = pipeline("sentiment-analysis")
 
 def analyze_sentiment(text):
     try:
+        result = sentiment_analyzer(text)
+        return result[0]['label'], result[0]['score']
+    except:
+        return "NEUTRAL", 0.5
         result = sentiment_analyzer(text)
         return result[0]['label'], result[0]['score']
     except:
