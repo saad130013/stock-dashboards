@@ -4,6 +4,7 @@ pandas-ta
 streamlit
 numpy==1.26.4
 prophet
+transformers
 plotly
 plyer
 tensorflow
